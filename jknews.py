@@ -76,7 +76,7 @@ class NewsArticle():
         model = Summarizer()
         # Create the summary by aggregating all the bodys of the articles
         for c in summ.keys():
-            df2=self.clust[self.clustclust[0]==c]
+            df2=self.clust[self.clust[0]==c]
             subtitles=subtitles+[self.results.loc[df2.index[0]]['title']]
             urls=urls+[self.results.loc[df2.index[0]]['url']]
             full_text=' '.join(self.results.loc[df2.index]['body'].unique())
