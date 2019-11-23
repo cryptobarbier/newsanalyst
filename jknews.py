@@ -104,9 +104,8 @@ class NewsArticle():
           i=0
           for element in self.summary:
             document.add_heading(self.subtitles[i], level=1)
-            u=document.add_heading(self.urls[i], level=2)
-            u.italic=True
-            u.style = document.styles['Normal']
+            p = document.add_paragraph()
+            hyperlink = p.add_hyperlink(text=self.urls[i], url=self.urls[i])
             p = document.add_paragraph(self.summary[element])
             i=i+1
           document.save(docname+'.docx')
