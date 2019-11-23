@@ -108,6 +108,7 @@ class NewsArticle():
             p = document.add_paragraph(self.summary[element])
             i=i+1
           document.save(docname+'.docx')
+          self.document=document
     
     
         
