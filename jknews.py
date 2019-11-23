@@ -32,11 +32,13 @@ def Shares(sh):
     return 0
 
 class NewsArticle():
-    def __init__(self,req,cutoff_ranking=30000):
+    def __init__(self,req,cutoff_ranking=30000,weight_cutoff=20):
             #Run the request and put the results into a json file
         res=requests.get(req)
         j=json.loads(res.text[14:-1],encoding='ascii')['articles']['results']
         df = pd.DataFrame.from_dict(j, orient='columns')
+        #Remove irrelevant articles
+        df=df[df['wgt']>weight_cutoff]
         #Remove Duplicates
         df=df[df['isDuplicate']==False]
         # Remove duplicate bodys i.e articles published in several websites
