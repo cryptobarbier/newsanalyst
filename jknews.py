@@ -112,6 +112,19 @@ class NewsArticle():
     def Cluster(self,thresh=0.4):
         clustering = AgglomerativeClustering(affinity='precomputed',distance_threshold=thresh,linkage='complete',n_clusters=None).fit(self.dist)
         self.clust=pd.DataFrame(clustering.labels_,index=self.results.index).sort_values(by=0)
+        
+    def Cluster2(self,thresh=0.42):
+        cluster_new=pd.DataFrame(index=self.dist.index,columns=[0])
+        d1=self.dist[self.dist<thresh]
+        cluster_nb=0
+        while len(d1)>0:
+            cl_indices=d1.iloc[0].dropna().index
+            for i in cl_indices:
+              cluster_new.at[cl_indices,0]=cluster_nb
+            cluster_nb=cluster_nb+1
+            d1=d1.drop(cl_indices)
+            d1=d1.drop(cl_indices,axis=1)
+        self.clust=cluster_new
     
     def Summary(self):
         summ=dict.fromkeys(self.clust[0].unique())
@@ -132,8 +145,8 @@ class NewsArticle():
               target=200
               ratiol=min(1,target/length)
             else:
-              target=min(1000,length*0.2)
-              ratiol=target/length
+              target=min(600+150*(len(df2)),length/len(df2)*(0.15+0.05*len(df2)))
+              ratiol=min(1,target/length)
             summ[c]=model(full_text,min_length=60,ratio=ratiol)
         self.summary=summ
         self.subtitles=subtitles
