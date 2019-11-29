@@ -15,7 +15,7 @@ from docx import Document
 import docx
 from docx.shared import Pt
 
-
+cat_to_drop=['dmoz/Business/Investing/Day Trading','news/Arts and Entertainment','dmoz/Home/Personal_Finance/Tax_Preparation','dmoz/Recreation/Travel/Transportation','dmoz/Shopping/Holidays','dmoz/Recreation/Travel/Transportation','news/Sports','dmoz/Computers/Hardware/Peripherals','dmoz/Business/Employment/Job Search','dmoz/Business/Investing/Guides','dmoz/Society/Work/Work and Family']
 
 
 #Extract the site rank of json result
@@ -173,6 +173,23 @@ class NewsArticle():
           document.save(docname+'.docx')
           self.document=document
     
+    def CleanFinance(self):
+        self.results['Cat']=self.results['categories'].apply(FilterCat)
+        self.results=self.results[self.results['Cat']==1]
+
+
+          
+# Returns 1 if articles does not contain any category to drop
+def FilterCat(categories):
+    df_filter=pd.DataFrame.from_dict(categories)
+    labs=df_filter['label'].unique()
+    overlap=set(labs).intersection(cat_to_drop)
+    if len(overlap)==0:
+        return 1
+    else:
+        return 0
+    
+        
     
         
 
