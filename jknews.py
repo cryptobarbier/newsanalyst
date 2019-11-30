@@ -15,7 +15,7 @@ from docx import Document
 import docx
 from docx.shared import Pt
 
-cat_to_drop=['dmoz/Business/Investing/Day Trading','news/Arts and Entertainment','dmoz/Home/Personal_Finance/Tax_Preparation','dmoz/Recreation/Travel/Transportation','dmoz/Shopping/Holidays','dmoz/Recreation/Travel/Transportation','news/Sports','dmoz/Computers/Hardware/Peripherals','dmoz/Business/Employment/Job Search','dmoz/Business/Investing/Guides','dmoz/Society/Work/Work and Family']
+cat_to_drop=['dmoz/Business/Investing/Day Trading','dmoz/Shopping/Gifts','news/Arts and Entertainment','dmoz/Home/Personal_Finance/Tax_Preparation','dmoz/Recreation/Travel/Transportation','dmoz/Shopping/Holidays','dmoz/Recreation/Travel/Transportation','news/Sports','dmoz/Computers/Hardware/Peripherals','dmoz/Business/Employment/Job Search','dmoz/Business/Investing/Guides','dmoz/Society/Work/Work and Family']
 
 
 #Extract the site rank of json result
@@ -78,7 +78,7 @@ def add_hyperlink(paragraph, url, text, color, underline):
     return hyperlink
 
 class NewsArticle():
-    def __init__(self,req,cutoff_ranking=30000,weight_cutoff=20):
+    def __init__(self,req,cutoff_ranking=30000,weight_cutoff=20,max_len=600):
             #Run the request and put the results into a json file
         res=requests.get(req)
         j=json.loads(res.text[14:-1],encoding='ascii')['articles']['results']
@@ -99,6 +99,7 @@ class NewsArticle():
         df.sort_values(by='Source Rank')
         df=df[df['Source Rank']<cutoff_ranking]
         self.results=df
+        self.max_len=max_len
     
     def CreateDist(self):
         
@@ -145,7 +146,7 @@ class NewsArticle():
               target=200
               ratiol=min(1,target/length)
             else:
-              target=min(600+150*(len(df2)),length/len(df2)*(0.15+0.05*len(df2)))
+              target=min(self.max_len+150*(len(df2)),length/len(df2)*(0.15+0.05*len(df2)))
               ratiol=min(1,target/length)
             summ[c]=model(full_text,min_length=60,ratio=ratiol)
         self.summary=summ
