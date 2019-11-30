@@ -178,6 +178,24 @@ class NewsArticle():
         self.results['Cat']=self.results['categories'].apply(FilterCat)
         self.results=self.results[self.results['Cat']==1]
 
+        # Save Ft articles in full 
+    def FTSave(self,title,docname):
+        ft_articles=self.results[self.results['url'].str[:18]=='https://www.ft.com']
+        document = Document()
+        style = document.styles['Normal']
+        font = style.font
+        font.name = 'Calibri'
+        font.size = Pt(10)
+        # Write the title passed at the function
+        document.add_heading(title, 0)
+        i=0
+        for element in ft_articles:
+            document.add_heading(element['title'], level=1)
+            p = document.add_paragraph(element['body'])
+            i=i+1
+        document.save(docname+'.docx')
+        self.document=document
+
 
           
 # Returns 1 if articles does not contain any category to drop
@@ -189,7 +207,8 @@ def FilterCat(categories):
         return 1
     else:
         return 0
-    
+
+
         
     
         
