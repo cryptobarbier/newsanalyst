@@ -189,9 +189,9 @@ class NewsArticle():
         # Write the title passed at the function
         document.add_heading(title, 0)
         i=0
-        for element in ft_articles:
-            document.add_heading(element['title'], level=1)
-            p = document.add_paragraph(element['body'])
+        for element in ft_articles.index:
+            document.add_heading(ft_articles.at[element,'title'], level=1)
+            p = document.add_paragraph(ft_articles.at[element,'body'])
             i=i+1
         document.save(docname+'.docx')
         self.document=document
